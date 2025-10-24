@@ -1,36 +1,33 @@
 # Dockerfile para FinMec - Sistema de Gestão Financeira via WhatsApp
-# Python 3.12 oficial slim (menor e mais seguro)
 FROM python:3.12-slim
 
-# Metadados
-LABEL maintainer="FinMec Team"
-LABEL description="Sistema de gestão financeira via WhatsApp com FastAPI, LangGraph e IA"
-LABEL version="1.0.0"
-
-# Variáveis de ambiente para Python
+# Variáveis de ambiente
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    UV_SYSTEM_PYTHON=1
+    UV_SYSTEM_PYTHON=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
 # Diretório de trabalho
 WORKDIR /app
 
-# Instalar dependências do sistema necessárias
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     postgresql-client \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar uv (gerenciador de pacotes Python ultra-rápido)
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# Instalar uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
-# Copiar arquivos de dependências primeiro (melhor cache do Docker)
-COPY requirements.txt .
+# Copiar pyproject.toml e requirements.txt
+COPY pyproject.toml requirements.txt ./
 
-# Instalar dependências Python usando uv (muito mais rápido que pip)
-RUN uv pip install --system --no-cache -r requirements.txt
+# Instalar dependências com uv
+RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 # Copiar o código da aplicação
 COPY . .
