@@ -1,0 +1,154 @@
+{
+  "name": "[ATIVACAO USUARIO]",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ativacao",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        48,
+        240
+      ],
+      "id": "88b98e48-2f61-48c0-a21a-60449046db23",
+      "name": "Webhook",
+      "webhookId": "dece74de-a4c4-4a2d-95e6-fb06c2cabb67"
+    },
+    {
+      "parameters": {
+        "content": "## Webhook Ativação Usuário\n\n### Inclua a URL de produção do Webhook nas variáveis de ambiente da sua aplicação no Easypanel. \n\n### Inclua sua URL e token da Uazapi no Node HTTPs\n\nNão esqueça de ativar o fluxo! ",
+        "height": 420,
+        "width": 480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2bb23a34-caa9-4313-b8e8-6757f6e4327f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://finmec.uazapi.com/send/text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "=3a27c82f-7d14-4656-b616-89a4be7e1ce4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.body.telefone }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.body.mensagem_ativacao.mensagem }}\n\nSegue abaixo as credenciais de acesso 👇🏼\n\nAcesse a plataforma pelo link abaixo:\n{{ $json.body.dominio }}\n\n*Usuario*: {{ $json.body.acesso_web.usuario }}\n*Senha*: {{ $json.body.acesso_web.senha }}\n\nAcesse o sistema e faça a troca do seu E-mail e Senha."
+            },
+            {
+              "name": "readchat",
+              "value": "true"
+            },
+            {
+              "name": "linkPreview",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a9a5f97c-106d-40e8-b245-b4d20f8d5944",
+      "name": "Envia Msg Ativação (Uazapi)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        272,
+        240
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-webhook.gcdutra.cloud",
+            "user-agent": "node",
+            "content-length": "791",
+            "accept": "*/*",
+            "accept-encoding": "br, gzip, deflate",
+            "accept-language": "*",
+            "content-type": "application/json",
+            "sec-fetch-mode": "cors",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n-webhook.gcdutra.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "2a3417dab634",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "evento": "usuario_ativado",
+            "timestamp": "2025-10-05T02:30:59.016Z",
+            "dominio": "https://finmec.gcdutra.cloud",
+            "id": 2,
+            "nome": "Gui ♣️",
+            "email": "556281798421@s.whatsapp.net",
+            "telefone": "556281798421",
+            "tipo_usuario": "normal",
+            "data_cadastro": "2025-10-04T23:28:35.569Z",
+            "token": "fin_7d174f2d51313262c615b31fc2287ecdd60281b884d8a1f6f158198e23ad9085",
+            "acesso_web": {
+              "usuario": "556281798421@s.whatsapp.net",
+              "senha": "x6MH9p0M"
+            },
+            "mensagem_ativacao": {
+              "titulo": "Sua conta foi ativada!",
+              "mensagem": "Olá Gui ♣️! Temos uma ótima notícia: sua conta no FinMec foi ativada com sucesso! Agora você tem acesso completo a todos os recursos da plataforma.",
+              "conteudo_email": "Olá Gui ♣️!\n\nSua conta no FinMec foi ativada com sucesso!\n\nAgora você tem acesso completo a todos os nossos recursos."
+            }
+          },
+          "webhookUrl": "https://n8n-webhook.gcdutra.cloud/webhook/ativacao",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Envia Msg Ativação (Uazapi)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9ba76a98-9dfa-4b6b-a4c1-6df2a16918f9",
+  "meta": {
+    "instanceId": "2d6121d4b62f94a186c73d670c8ffdfd14c8e5b684b8378de4e97df327caec82"
+  },
+  "id": "w7U2yziKjxqJPjU2",
+  "tags": []
+}

@@ -1,0 +1,192 @@
+{
+  "name": "[INCLUI LEMBRETES]",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "data_lembrete"
+            },
+            {
+              "name": "titulo"
+            },
+            {
+              "name": "descricao"
+            },
+            {
+              "name": "apikey_api"
+            },
+            {
+              "name": "server_url_api"
+            },
+            {
+              "name": "server_url_uazapi"
+            },
+            {
+              "name": "apikey_uazapi"
+            },
+            {
+              "name": "remotejid"
+            }
+          ]
+        }
+      },
+      "id": "d220e334-fbb0-4eff-b387-c10388a5bcf4",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.server_url_api }}/api/reminders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.apikey_api }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $json.titulo }}"
+            },
+            {
+              "name": "descricao",
+              "value": "={{ $json.descricao }}"
+            },
+            {
+              "name": "data_lembrete",
+              "value": "={{ $json.data_lembrete }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "02757e03-1418-4edb-b076-fd0adbe61d2a",
+      "name": "insere_lembrete"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"server_url_uazapi\"] }}/sender/simple",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "token",
+              "value": "={{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"apikey_uazapi\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"numbers\": [\n    \"{{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"remotejid\"] }}\"\n  ],\n  \"type\": \"text\",\n  \"delayMin\": 10,\n  \"delayMax\": 30,\n  \"scheduled_for\": {{ new Date($json.data_lembrete).getTime() }},\n  \"info\": \"string\",\n  \"text\": {{ JSON.stringify($item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"descricao\"]) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "88946526-48fd-46d2-a708-74110ea78b57",
+      "name": "Programa Lembrete",
+      "retryOnFail": true,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e95bd6b7-9c54-490f-8d48-9e38c01103ae",
+              "name": "output",
+              "value": "={{ JSON.stringify($item(\"0\").$node[\"insere_lembrete\"].json) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        0
+      ],
+      "id": "3b2d80ac-f81e-45f2-8575-7ba8b0babe9e",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "insere_lembrete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "insere_lembrete": {
+      "main": [
+        [
+          {
+            "node": "Programa Lembrete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programa Lembrete": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b5d644d0-f31e-4271-819a-9d261b7244f4",
+  "meta": {
+    "instanceId": "2d6121d4b62f94a186c73d670c8ffdfd14c8e5b684b8378de4e97df327caec82"
+  },
+  "id": "dHFBMBrrHW8ojAec",
+  "tags": []
+}

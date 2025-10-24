@@ -1,0 +1,3321 @@
+{
+  "name": "[FLUXO PRINCIPAL]",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "finmec",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -3216,
+        768
+      ],
+      "id": "8adf16b1-524e-4ef8-9e15-436318822578",
+      "name": "Webhook",
+      "webhookId": "b690fdd0-c601-4527-be8f-a074eb6849cf"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0b9d766-c918-4da5-9b24-36e40af980fa",
+              "name": "openai_token",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "1b31132d-9dda-4bd9-b1d7-54acf080ae93",
+              "name": "gemini_token",
+              "value": "AIzaSyDCkEUNeAdIraVlBDlTxFGrfXoi2kjaInk",
+              "type": "string"
+            },
+            {
+              "id": "9e58d679-bb11-4288-a80b-4c451aa07f93",
+              "name": "model_gemini",
+              "value": "gemini-2.5-flash",
+              "type": "string"
+            },
+            {
+              "id": "7e50a8fb-cf1b-4510-9316-7d9c8897629d",
+              "name": "endpoint_url",
+              "value": "https://finmec-hom.gcdutra.cloud",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2976,
+        592
+      ],
+      "id": "b4c2a14b-1e63-4308-bc4d-84446e87d5b1",
+      "name": "credenciais"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -2768,
+        768
+      ],
+      "id": "d9643f26-4501-4251-bcf8-040b7a9ad3b2",
+      "name": "Envia os dados do Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message.messageType }}",
+                    "rightValue": "Conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8a03b61f-c297-4cda-95f8-a7eb9cd42977"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Conversation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "037f55e5-1143-42da-a197-27788c0363c9",
+                    "leftValue": "={{ $json.body.message.messageType }}",
+                    "rightValue": "ExtendedTextMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ExtendedTextMessage"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "85304ebf-3f7f-41d5-9926-03645292d022",
+                    "leftValue": "={{ $json.body.message.messageType }}",
+                    "rightValue": "AudioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "67c85130-f956-4f25-b837-80b28c19b437",
+                    "leftValue": "={{ $json.body.message.messageType }}",
+                    "rightValue": "ImageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagem"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f2f6210d-8d77-4a52-b4f2-2e5a3dc704d2",
+                    "leftValue": "={{ $json.body.message.messageType }}",
+                    "rightValue": "DocumentMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2560,
+        720
+      ],
+      "id": "f7a9f896-e794-4278-ad95-5f6c684fb094",
+      "name": "rotas de mensagens recebidas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e186ec4c-4bc8-4aec-b104-094b5812d7b8",
+              "name": "remoteJid",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "164e6a29-5dbc-445d-83b3-3eb3eaae6c3f",
+              "name": "message",
+              "value": "={{ $json.body.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a4bda7ce-2450-448b-9606-8b1254292488",
+              "name": "id",
+              "value": "={{ $json.body.message.messageid }}",
+              "type": "string"
+            },
+            {
+              "id": "6e14f4b0-5bbd-4f0e-acac-467d7e145aca",
+              "name": "timestamp",
+              "value": "={{ $json.body.message.messageTimestamp }}",
+              "type": "number"
+            },
+            {
+              "id": "133de7d0-08d8-49e4-99bb-8561102c3d91",
+              "name": "pushname",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"senderName\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1920,
+        432
+      ],
+      "id": "73a834b4-951a-4761-81ce-9d62f56496b0",
+      "name": "estruturei os dados (conversation)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $item(\"0\").$node[\"credenciais\"].json[\"openai_token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4o-transcribe"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1808,
+        688
+      ],
+      "id": "96ce7d0c-0a3a-440c-9df8-730837b021bc",
+      "name": "transcreve o áudio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e186ec4c-4bc8-4aec-b104-094b5812d7b8",
+              "name": "remoteJid",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "164e6a29-5dbc-445d-83b3-3eb3eaae6c3f",
+              "name": "message",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a4bda7ce-2450-448b-9606-8b1254292488",
+              "name": "id",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e14f4b0-5bbd-4f0e-acac-467d7e145aca",
+              "name": "timestamp",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageTimestamp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "c5f52a8d-b8bb-4873-a988-4ae2e76eeeb3",
+              "name": "pushname",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"senderName\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1584,
+        688
+      ],
+      "id": "24adac2e-c0e4-4746-8a52-cac0f844825d",
+      "name": "estruturei os dados (audio)"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -1264,
+        720
+      ],
+      "id": "474d2b6e-5209-4b47-8330-4d77a61bad77",
+      "name": "referencia das mensagens recebidas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e7ebd82-5cd7-4766-9648-14915698fd75",
+              "name": "remoteJid",
+              "value": "={{ $('referencia das mensagens recebidas').item.json.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "b15d54b8-6ac7-4707-bce9-1b4c0fbc6ea6",
+              "name": "message",
+              "value": "={{ JSON.stringify($json.message) }}",
+              "type": "string"
+            },
+            {
+              "id": "e422f9ba-effa-4759-916e-78e6925aa64b",
+              "name": "id",
+              "value": "={{ $('referencia das mensagens recebidas').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "4a426f8f-6d46-43b5-9f15-b043f5f36903",
+              "name": "timestamp",
+              "value": "={{ $('referencia das mensagens recebidas').item.json.timestamp }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1024,
+        768
+      ],
+      "id": "80a51934-4d62-4693-a64a-d908a17705b0",
+      "name": "Referencia dos Dados"
+    },
+    {
+      "parameters": {
+        "content": "# Buffer de Mensagens\n\n## Neste formato de entregável, não utilizamos Buffer de mensagens, por não ser uma conversação. \n\n\n- Caso queira implementar: \n\nSe você já é aluno, recomendo assistir essa aula para implementar: \nhttps://xpiria.ticto.club/content/52405/module/163363/lesson/427980\n\nSe você não é aluno, adquira o Treinamento para Criar Agentes de IA por R$ 19,90:\nhttps://payment.ticto.app/O3ADA0FF0",
+        "height": 360,
+        "width": 820,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        368
+      ],
+      "id": "2625809c-f52b-40c9-8a0e-6afa009b81b9",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Roteamento de Mensagens Recebidas (texto, áudio, imagem e PDF)",
+        "height": 1080,
+        "width": 1480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2608,
+        368
+      ],
+      "id": "537ca318-58d1-4d83-9b9c-df99702283eb",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        224,
+        624
+      ],
+      "id": "ec3c3588-bf54-4f9d-b162-bc5a7cba90fb",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43a3a95e-5313-4369-bb73-6a9bfd830097",
+              "name": "user_token",
+              "value": "={{ $json.token }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        624
+      ],
+      "id": "3a0d9d72-7888-456a-be0f-3404db0e32de",
+      "name": "Token do Usuario"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        608,
+        784
+      ],
+      "id": "8da9aafd-ca18-4594-9c76-7532272116c9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8240b730-8b15-4341-a171-7a914d3c0d11",
+              "name": "user_token",
+              "value": "={{ $item(\"0\").$node[\"Token do Usuario\"].json[\"user_token\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "c2affcda-28ad-4116-a4de-2913fc8de699",
+              "name": "endpoint_url",
+              "value": "={{ $item(\"0\").$node[\"credenciais\"].json[\"endpoint_url\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "df467586-199e-4402-8752-3ff0aa74cdcb",
+              "name": "sessionId",
+              "value": "={{ $json.remotejid }}",
+              "type": "string"
+            },
+            {
+              "id": "8a3b7eb7-2b5c-45b5-846f-4c622644c91b",
+              "name": "remotejid",
+              "value": "={{ $item(\"0\").$node[\"Merge\"].json[\"remotejid\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        784
+      ],
+      "id": "fb96a1e4-fa9b-4aed-8526-5b82a6a99d59",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c59b346-44a7-4607-9945-f25a104cb5fb",
+              "name": "remotejid",
+              "value": "={{ $json.remotejid.split('@')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "82b33909-a10b-4946-bc9f-3757fd19c6ff",
+              "name": "message",
+              "value": "={{ $item(\"0\").$node[\"Referencia dos Dados\"].json[\"message\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -416,
+        784
+      ],
+      "id": "412939ea-7de5-4c3a-83cc-ed46924266d0",
+      "name": "Variaveis do Sistema"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "aa0f1b09-0161-4cc5-9cbb-81e7d26fb937",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -640,
+        768
+      ],
+      "id": "9ca3ced4-be9a-4305-84c4-50a9ac57e59f",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM usuarios WHERE remotejid=$1;",
+        "options": {
+          "queryReplacement": "={{ $json.remoteJid }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -816,
+        768
+      ],
+      "id": "0b57d8c0-eb5e-40c6-8e09-2bbd4358be7d",
+      "name": "Varre o BD pelo remotejid",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM api_tokens WHERE usuario_id=$1;",
+        "options": {
+          "queryReplacement": "={{ $('Varre o BD pelo remotejid').item.json?.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        32,
+        624
+      ],
+      "id": "2dbd58f9-3bcd-406a-9bdc-6504d1a60ca1",
+      "name": "Pega o Token do Usuario",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "usuarios",
+          "mode": "list",
+          "cachedResultName": "usuarios"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ativo": "={{ false }}",
+            "nome": "={{ $('referencia das mensagens recebidas').item.json.pushname }}",
+            "remotejid": "={{ $('referencia das mensagens recebidas').item.json.remoteJid }}",
+            "email": "={{ $('referencia das mensagens recebidas').item.json.remoteJid }}",
+            "senha": "mudar@123",
+            "telefone": "={{ $('referencia das mensagens recebidas').item.json.remoteJid.split('@').first() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "remotejid",
+              "displayName": "remotejid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "senha",
+              "displayName": "senha",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tipo_usuario",
+              "displayName": "tipo_usuario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ativo",
+              "displayName": "ativo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_cadastro",
+              "displayName": "data_cadastro",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ultimo_acesso",
+              "displayName": "ultimo_acesso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_cancelamento",
+              "displayName": "data_cancelamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "motivo_cancelamento",
+              "displayName": "motivo_cancelamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_expiracao_assinatura",
+              "displayName": "data_expiracao_assinatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status_assinatura",
+              "displayName": "status_assinatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1056,
+        1024
+      ],
+      "id": "af0669e1-cf30-408d-b57b-e50655f9af1f",
+      "name": "Cria Usuario",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO api_tokens (\n  usuario_id,\n  \"token\",\n  nome,\n  descricao,\n  data_criacao,\n  ativo,\n  master,\n  rotacionavel,\n  data_expiracao\n)\nVALUES (\n  $1, \n  'fin_' || encode(gen_random_bytes(32), 'hex'),\n  'MasterToken',\n  'Token principal do usuário, não removível.',\n  NOW(),\n  TRUE,\n  TRUE,\n  TRUE,\n  NULL\n);",
+        "options": {
+          "queryReplacement": "={{ $json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -880,
+        1024
+      ],
+      "id": "000aa813-8c56-4d1e-87f0-5db084478e3e",
+      "name": "Cria MasterToken",
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO carteiras (\n  usuario_id,\n  nome,\n  descricao,\n  saldo_atual,\n  data_criacao\n)\nVALUES (\n  $1, -- ID do usuário\n  'Principal',\n  'Carteira principal criada automaticamente',\n  0.00,\n  NOW()\n);",
+        "options": {
+          "queryReplacement": "={{ $('Cria Usuario').item.json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -688,
+        1024
+      ],
+      "id": "1cb2140a-2bb9-4687-aecf-e8f9ae2661bb",
+      "name": "Cria Carteira Principal",
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.body.BaseUrl }}/message/download",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $json.body.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"{{ $json.body.message.messageid }}\",\n  \"return_base64\": true,\n  \"return_link\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2224,
+        688
+      ],
+      "id": "da6b83b1-e61b-4b39-8ebb-2cae8df6794d",
+      "name": "Pega base64 do arquivo2"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64Data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2000,
+        688
+      ],
+      "id": "20749c87-6c57-4bf1-a54c-1a1ed1eb20aa",
+      "name": "convert MP3 para binario"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.body.BaseUrl }}/message/download",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $json.body.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"{{ $json.body.message.messageid }}\",\n  \"return_base64\": true,\n  \"return_link\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2224,
+        992
+      ],
+      "id": "c9d64e30-9183-496a-8563-df0eaa5445aa",
+      "name": "Pega base64 do arquivo3"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM welcome_messages WHERE type='new_user'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -496,
+        1024
+      ],
+      "id": "35e6153b-d68a-4eb2-9da8-d9a844e376bf",
+      "name": "Postgres",
+      "alwaysOutputData": false,
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9bec89e4-6369-46d2-af45-3f839e8132dd",
+              "name": "message",
+              "value": "={{ $json.message.replace('{nome}',$node[\"Cria Usuario\"].json[\"nome\"]?.split(' ').first()) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        1024
+      ],
+      "id": "ccdda140-3a4c-4a3d-818c-2b4de33ccae7",
+      "name": "Formata Mensagem BOAS VINDAS!"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM welcome_messages WHERE type='inactive_user'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        32,
+        352
+      ],
+      "id": "31314a4b-bd35-403d-a3fe-fa41da0ba42c",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "DZmG0RZXWMi9aKGU",
+          "name": "Postgres Hom"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9bec89e4-6369-46d2-af45-3f839e8132dd",
+              "name": "message",
+              "value": "={{ $json.message.replace('{nome}', $node[\"Variaveis do Sistema\"].json[\"nome\"] ?.split(' ').first()) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        352
+      ],
+      "id": "5a4f27b8-4ccf-4158-87f2-c11a47ea1531",
+      "name": "Formata Mensagem INATIVO"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $item(\"0\").$node[\"credenciais\"].json[\"model_gemini\"] }}:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{ $item(\"0\").$node[\"credenciais\"].json[\"gemini_token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"contents\": [\n      {\n        \"parts\": [\n          {\"text\": {{ JSON.stringify(` Descreva todos os items da imagem (ela pode ser um cupom fiscal, nota fiscal ou apenas uma imagem com anotacoes de produtos que foram adquiridos ou comprados), retorne em um formato como no exemplo abaixo:\nComprei DESCRICAO DO ITEM 1 por VALOR\nComprei DESCRICAO DO ITEM 2 por VALOR\n\nAo responder os números do valor devem usar a notação decimal americana\n`) }}},\n          {\n            \"inline_data\": {\n              \"mime_type\": \"{{ $json.mimetype }}\",\n              \"data\": \"{{ $json.base64Data }}\"\n            }\n          }\n        ]\n      }\n    ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2000,
+        992
+      ],
+      "id": "ad95a71a-1c0a-431c-a438-42031adbfb56",
+      "name": "Analisa Imagem"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "=# ASSISTENTE DE CONTROLE FINANCEIRO PESSOAL\n\n## Contexto\nVocê é um assistente especializado em controle financeiro pessoal. Seu papel é registrar transações (receitas e despesas) e gerar resumos financeiros por período. As transações são organizadas por categoria (ex: Alimentação, Farmácia, Escola, etc.) e tipificadas como Receita ou Despesa.\n\n## Objetivo\n- **Registrar transações**: Receitas e despesas organizadas por categoria\n- **Gerar resumos financeiros**: Por período específico\n- **Categorizar adequadamente**: Alimentação, Farmácia, Escola, Moradia, Transporte, Lazer, Trabalho/Profissional, Outros\n- **Tipificar corretamente**: Receita (ganhos) ou Despesa (gastos)\n- **Programar lembretes**: lembrar o usuário sobre um gasto ou uma despesa futura. \n\n## Dicionário de Classificação Financeira para Receitas x Despesas\n\n### RECEITAS (Entradas)\n**Palavras-chave**: fiz, entrou, caiu na conta, pagaram, achei, embolsei, lucrei, comissão, freela, trampo, bico, cliente pagou, estorno, reembolso\nEx: `fiz 20 reais de uber agora`\n\n### DESPESAS (Saídas)\n**Palavras-chave**: gastei, paguei, comprei, se foi, saiu, torrei, queimei\n\n## TEMPLATES DISPONÍVEIS\n\n### 1. RECEITA INSERIDA COM SUCESSO\n<template_receita_inserida_com_sucesso>🟢 Receita registrada!  \n*[Descrição da receita]*  \n💰 R$ [valor em 00,00]  \n🗓 [data formato dd/MM/yyyy]\n📊 [Categoria]\n📍 Forma de pagamento: [Forma de Pagamento]\n🔍 Código da Transação: [ID da transação]</template_receita_inserida_com_sucesso>\n\n### 2. DESPESA INSERIDA COM SUCESSO\n<template_despesa_inserida_com_sucesso>🔴 Despesa registrada!  \n*[Descrição da despesa]*  \n💰 R$ [valor em 00,00] \n🗓 [data formato dd/MM/yyyy]\n📊 [Categoria]\n📍 Forma de pagamento: [Forma de Pagamento]\n🔍 Código da Transação: [ID da transação]</template_despesa_inserida_com_sucesso>\n\n- Se for compra parcelada, lançar como despesas separadas nos seus respectivos valores. \n\n### 3. LEMBRETE DE GASTO FUTURO\n<template_mensagem_lembrete>🔔 LEMBRETE  \n✅ [Receita ou Despesa] registrada!  \n*[Descrição]*  \n💰 R$ [valor em 00,00] (Omitir se não houver)\n🗓 [data formato dd/MM/yyyy]\n💸 [Receita/Despesa]\n🔍 Código do Lembrete: [ID do lembrete]</template_mensagem_lembrete>\n\n### 4. RESUMO DE OPERAÇÕES POR PERÍODO\n<template_resumo_operacoes_por_periodo>*Relatório de Gastos:*\n🗓 De [Data inicial] à [Data Final]  \n\n📊 [DESPESAS] - Categorias:\n\n🍔 R$ [valor acumulado] (*Alimentação*)  \n💊 R$ [valor acumulado] (*Saúde*)  \n🎓 R$ [valor acumulado] (*Educação*)  \n🏠 R$ [valor acumulado] (*Moradia*)  \n🚌 R$ [valor acumulado] (*Transporte*)  \n🎉 R$ [valor acumulado] (*Lazer*)  \n💼 R$ [valor acumulado] (*Vestuário*)  \n🔖 R$ [valor acumulado] (*Outros*)\n\n📊 [RECEITAS] - Categorias:\n\n🍔 R$[valor acumulado] (*Alimentação*)  \n💊 R$[valor acumulado] (*Saúde*)  \n🎓 R$[valor acumulado] (*Educação*)  \n🏠 R$[valor acumulado] (*Moradia*)  \n🚌 R$[valor acumulado] (*Transporte*)  \n🎉 R$[valor acumulado] (*Lazer*)  \n💼 R$[valor acumulado] (*Vestuário*)  \n🔖 R$[valor acumulado] (*Outros*)\n\n💵 Saldo: *R$ [Saldo da Carteira no período]*</template_resumo_operacoes_por_periodo>\n\n### 5. RELATÓRIO DE GASTOS POR CATEGORIA\n<template_resumo_operacoes_por_categoria>*Relatório de Gastos na Categoria [CATEGORIA]:*\n🗓 De [Data inicial] à [Data Final]  \n\n📊 [DESPESAS]: R$ [Valor gasto na Categoria] \n\n📊 [RECEITAS]: R$ [Valor recebido na Categoria] \n\n*Total em receitas:* R$ [Valor_Total_Receitas]\n*Total em despesas:* R$ [Valor_Total_Despesas]\n\n💵 Saldo: *R$ [Saldo da Carteira no período]*</template_resumo_operacoes_por_categoria>\n\n- Preencha os campos com dados disponíveis\n- Sempre use os templates para responder o usuário sobre as transações, de acordo com a solicitação encontre o template adequado. \n\n### 6. ATUALIZAÇÃO DE TRANSAÇÕES\n- Atualize somente o que for necessário, de acordo com a solicitação do usuário. \n- Somente atualize a descrição da transação se o usuário solicitar.\n- Execute mudanças pontuais.\n- Apenas mude o tipo de transação (Receita ou Despesa) se o usuário solicitar especificamente para fazer isso. Senão, mantenha a original. \n\n## Dados de Contexto\n\n- **Timezone**: {{ $now.zoneName }}\n- **Data atual**: {{ $now.weekdayLong }}, {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}\n- **Hora atual**: {{ $now.format('H:m:s') }}\n\n### Formatação de Saída (Padrão WhatsApp)\n\nNEGRITO: *texto* (um asterisco)\nSUBLINHADO: _texto_ (um underscore)\nNUNCA usar formatação dupla (**texto** ou __texto__)\nNUNCA usar hashtags (#) para títulos\n\n- NUNCA duplique asteriscos\n- Mantenha consistência na apresentação de valores monetários (Ex: R$ 9.999,99)\n- Organize as transações de forma cronológica (mais recente primeiro)\n\nExemplo incorreto:\n**Exemplo**\nExemplo correto:\n*Exemplo*"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1024,
+        784
+      ],
+      "id": "932de60c-8975-458a-9763-09bc55422ec5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Sempre chame essa função para inserir novas transações para o usuário (receitas ou despesas). Lembre-se que você precisa ter o id_carteira e id_categoria.",
+        "method": "POST",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/transactions",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "descricao",
+              "valueProvider": "fieldValue",
+              "value": "{descricao}"
+            },
+            {
+              "name": "valor",
+              "valueProvider": "fieldValue",
+              "value": "{valor_transacao}"
+            },
+            {
+              "name": "tipo",
+              "valueProvider": "fieldValue",
+              "value": "{tipo}"
+            },
+            {
+              "name": "carteira_id",
+              "valueProvider": "fieldValue",
+              "value": "{carteira_id_do_usuario_em_formato_numerico}"
+            },
+            {
+              "name": "categoria_id",
+              "valueProvider": "fieldValue",
+              "value": "{categoria_id_adequada_para_a_transacao}"
+            },
+            {
+              "name": "data_transacao",
+              "valueProvider": "fieldValue",
+              "value": "{data_transacao}"
+            },
+            {
+              "name": "status",
+              "valueProvider": "fieldValue",
+              "value": "Efetivada"
+            },
+            {
+              "name": "forma_pagamento_id",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        1552
+      ],
+      "id": "0aea13d8-02fc-4dce-a9f5-54e6b4ab34a9",
+      "name": "insere_transacoes1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Deleta todas uma transacao do usuario baseado no id da transacao.",
+        "method": "DELETE",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/transactions/{id_da_transacao}",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        1552
+      ],
+      "id": "1f3ede46-f67e-4e88-87eb-a53d4f73e279",
+      "name": "deleta_transacao"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Atualiza uma transacao baseada no id da transacao. Atualize somente os campos necessários, de acordo com a solicitação do usuário. ",
+        "method": "PATCH",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/transactions/{id_da_transacao}",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "descricao"
+            },
+            {
+              "name": "valor",
+              "valueProvider": "fieldValue",
+              "value": "={valor_transacao}"
+            },
+            {
+              "name": "tipo"
+            },
+            {
+              "name": "carteira_id",
+              "valueProvider": "fieldValue",
+              "value": "{carteira_id_do_usuario_em_formato_numerico}"
+            },
+            {
+              "name": "categoria_id",
+              "valueProvider": "fieldValue",
+              "value": "{categoria_id_adequada_para_a_transacao}"
+            },
+            {
+              "name": "data_transacao"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        1552
+      ],
+      "id": "f16258af-87db-41ba-b064-c4974a56b77d",
+      "name": "atualiza_transacao"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Pega as transacoes recentes do usuario",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/transactions/recent",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        1552
+      ],
+      "id": "1c477d78-726c-4334-8d1a-9f0eb288daf7",
+      "name": "transacoes_recentes"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Busca todas os lembretes.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/reminders",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        2304,
+        1552
+      ],
+      "id": "3e2dc6e2-7c08-44de-a17e-8378d9edc2c0",
+      "name": "busca_todos_lembretes"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Sempre chame essa função para inserir uma transação. Lista todas as categorias do usuário, use a descricao para melhor atribuicao em um lancamento de transacoes.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/categories",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        1552
+      ],
+      "id": "1f2cd06d-a0ce-40be-9103-141ac2ac2250",
+      "name": "lista_todas_categorias"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Pega informacoes sobre a carteira atual para incluir uma transação. Sempre chame antes de incluir transações.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/wallet/current",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        1552
+      ],
+      "id": "f09ed6b0-f167-45bf-8053-7fe7853f1963",
+      "name": "busca_informacoes_carteira_atual"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3e248bbf-26bb-4105-9adb-1407cd3261ff",
+                    "leftValue": "={{ $json.output.match(/\\/[^\\s\"']+\\.(png|jpg|jpeg)/gi).length > 0 ? true : false }}",
+                    "rightValue": "png",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagens"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1408,
+        784
+      ],
+      "id": "b2b0818c-6b55-43d6-9be7-083caa8e149c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Gera um grafico de barra dos ultimos 7 dias.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/charts/bar?{{ $now.toMillis() }}",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "date",
+              "valueProvider": "fieldValue",
+              "value": "={{ $now.format('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "descricao",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "descricao",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        1552
+      ],
+      "id": "9a8db9f8-4def-445a-85f7-73a4f612f3b2",
+      "name": "grafico_barra_ultimos_sete_dias"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Chame essa função para gerar um gráfico de pizza. ",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/charts/pizza?{{ $now.plus(7,'days').toMillis() }}",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "date",
+              "valueProvider": "fieldValue",
+              "value": "={{ $now.format('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        2672,
+        1552
+      ],
+      "id": "8dab551b-6d0a-4285-9f91-86921b112c45",
+      "name": "grafico_pizza"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini-2024-07-18",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI-2024-07-18"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Gere um resumo intuitivo para usar como caption de uma imagem no whatsapp. Utilize quebras de linha para melhor visualização e compreensão.\n\n- Mantenha a resposta de acordo com o template recebido. Apenas reorganize as informações.\n\n- Exclua os links. \n\n- Mantenha apenas as informações relevantes sobre os valores\n\n### FORMATAÇÃO (PADRÃO WHATSAPP)\n- Sempre siga a formatação abaixo: \n\nNEGRITO: *texto* (um asterisco)\nSUBLINHADO: _texto_ (um underscore)\nNUNCA usar formatação dupla (*texto* ou __texto__)\nNUNCA usar hashtags (#) para títulos\n\nExemplo correto: \n*Relatório de Gastos - Setembro de 2025:*\nTotal de despesas acumuladas: *R$ 9,709.53*\n\n_Detalhamento das despesas:_\n\n- *Alimentação:* R$ 120.00\n- *Moradia:* R$ 210.00\n- *Transporte:* R$ 240.00\n- *Lazer:* R$ 50.00\n- *Educação:* R$ 200.00\\\n- *Outros:* R$ 4.53\n\nQualquer dúvida, estou à disposição!\n",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1632,
+        768
+      ],
+      "id": "a12288f1-656d-4753-b75c-34e6eeadb967",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "iFpIuifkGxjTrQxJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"BaseUrl\"] }}/send/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}"
+            },
+            {
+              "name": "type",
+              "value": "image"
+            },
+            {
+              "name": "file",
+              "value": "={{ $node[\"Switch\"].json[\"output\"].match(/https?:\\/\\/[^\\s\"']+\\.(?:png|jpg|jpeg|gif|svg|webp)/g)?.first() }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "55dcafa8-ac7a-4cf2-8b6d-9f8d11c5b7c6",
+      "name": "Envia Imagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1968,
+        768
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"BaseUrl\"] }}/send/text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output.replace(/<\\/?[^>]+>/g, \"\") }}"
+            },
+            {
+              "name": "readchat",
+              "value": "true"
+            },
+            {
+              "name": "linkPreview",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "501b88d0-0261-457f-8180-44e9c3974ed1",
+      "name": "Envia texto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1648,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Chame essa tool para inserir ou cadastrar lembretes",
+        "workflowId": {
+          "__rl": true,
+          "value": "dHFBMBrrHW8ojAec",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dHFBMBrrHW8ojAec",
+          "cachedResultName": "[INCLUI LEMBRETES]"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "apikey_uazapi": "={{ $('Webhook').item.json.body.token}}",
+            "server_url_uazapi": "={{ $('Webhook').item.json.body.BaseUrl}}",
+            "apikey_api": "={{ $('Edit Fields').item.json.user_token }}",
+            "server_url_api": "={{ $('Edit Fields').item.json.endpoint_url }}",
+            "data_lembrete": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data_lembrete', `Retorne a data no formato ISO 8601 SEM o \"Z\", já ajustada para o fuso America/Sao_Paulo GTC -3. \nExemplo: 2025-09-15T09:00:00-03:00`, 'string') }}",
+            "titulo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('titulo', ``, 'string') }}",
+            "descricao": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descricao', `Faça uma mensagem formatada para enviar no WhatsApp em formato de lembrete. Siga o template abaixo:\n🔔 LEMBRETE \n[Descrição do Lembrete] \n💰 R$ [Valor]  \n🗓 [Data em dd/MM/yyyy]\n`, 'string') }}",
+            "remotejid": "={{ $('Webhook').item.json.body.message.chatid }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "data_lembrete",
+              "displayName": "data_lembrete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "titulo",
+              "displayName": "titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "descricao",
+              "displayName": "descricao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "apikey_api",
+              "displayName": "apikey_api",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "server_url_api",
+              "displayName": "server_url_api",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "server_url_uazapi",
+              "displayName": "server_url_uazapi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "apikey_uazapi",
+              "displayName": "apikey_uazapi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "remotejid",
+              "displayName": "remotejid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        1552
+      ],
+      "id": "d2827081-a324-409a-82e3-678796300e37",
+      "name": "insere_lembretes"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Sempre chame essa função para consultar qual será a forma de pagamento para realizar uma transação. Considere por Padrão sendo pagamento por PIX.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/payment-methods",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        1552
+      ],
+      "id": "90a995df-5776-4c7d-bec2-218a587cef94",
+      "name": "consulta_forma_pagamento"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Chame essa função antes de alterar uma transação, para obter informações da transação, de acordo com o id da transacao",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/transactions/{{ $fromAI('parameters0_Value', ``, 'string') }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        944,
+        1552
+      ],
+      "id": "39161e33-88ce-40cb-b483-e540a070dfd0",
+      "name": "busca_transacao_especifica"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Chame essa função para gerar um resumo dos gastos do mês atual, por categoria e totais de receitas/despesas.",
+        "url": "={{$('Edit Fields').item.json.endpoint_url}}/api/dashboard/summary",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "apikey",
+              "valueProvider": "fieldValue",
+              "value": "={{ $('Edit Fields').item.json.user_token }}"
+            },
+            {
+              "name": "Accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1792,
+        1552
+      ],
+      "id": "c2f9cd4e-a9b1-4047-a526-92fe043e6dea",
+      "name": "resumo_mes_atual"
+    },
+    {
+      "parameters": {
+        "description": "Gera um relatório detalhado de todas as transações de uma determinada categoria. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "5b9QHAwk4hxbu7XB",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/5b9QHAwk4hxbu7XB",
+          "cachedResultName": "[RELATORIO DETALHADO]"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "data_inicio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data_inicio', ``, 'string') }}",
+            "data_fim": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data_fim', ``, 'string') }}",
+            "query": "={{ $('Edit Fields').item.json.message }}",
+            "apikey": "={{ $('Edit Fields').item.json.user_token }}",
+            "server_url": "={{ $('Edit Fields').item.json.endpoint_url }}",
+            "categoria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('categoria', `Inclui um array de categorias caso o usuário tenha solicitado em uma determinada categoria. Se não tiver categoria mencionada, carrega como um parametro nulo. `, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "data_inicio",
+              "displayName": "data_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "data_fim",
+              "displayName": "data_fim",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "apikey",
+              "displayName": "apikey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "server_url",
+              "displayName": "server_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        1552
+      ],
+      "id": "b044465b-1246-4a46-a7fc-977671bfc1a8",
+      "name": "relatorio_detalhado"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        1072
+      ],
+      "id": "15d5649e-bf2c-49ef-a7ff-f3829c996e81",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "iFpIuifkGxjTrQxJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e186ec4c-4bc8-4aec-b104-094b5812d7b8",
+              "name": "remoteJid",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "164e6a29-5dbc-445d-83b3-3eb3eaae6c3f",
+              "name": "message",
+              "value": "={{ $item(\"0\").$node[\"Analisa Imagem\"].json[\"candidates\"][\"0\"][\"content\"][\"parts\"][\"0\"][\"text\"] }}, {{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"text\"] }}, ",
+              "type": "string"
+            },
+            {
+              "id": "a4bda7ce-2450-448b-9606-8b1254292488",
+              "name": "id",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e14f4b0-5bbd-4f0e-acac-467d7e145aca",
+              "name": "timestamp",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageTimestamp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "c5f52a8d-b8bb-4873-a988-4ae2e76eeeb3",
+              "name": "pushname",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"senderName\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1584,
+        880
+      ],
+      "id": "21607e86-ee10-47ca-883f-8760abfd739e",
+      "name": "estruturei os dados (imagem com legenda)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e186ec4c-4bc8-4aec-b104-094b5812d7b8",
+              "name": "remoteJid",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "164e6a29-5dbc-445d-83b3-3eb3eaae6c3f",
+              "name": "message",
+              "value": "={{ $item(\"0\").$node[\"Analisa Imagem\"].json[\"candidates\"][\"0\"][\"content\"][\"parts\"][\"0\"][\"text\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a4bda7ce-2450-448b-9606-8b1254292488",
+              "name": "id",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e14f4b0-5bbd-4f0e-acac-467d7e145aca",
+              "name": "timestamp",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageTimestamp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "c5f52a8d-b8bb-4873-a988-4ae2e76eeeb3",
+              "name": "pushname",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"senderName\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1584,
+        1072
+      ],
+      "id": "5c29c023-2d80-4ec3-ac4b-3758f533fd23",
+      "name": "estruturei os dados (imagem sem legenda)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1b14b39-fcc8-4104-96b9-afa5e7605297",
+              "leftValue": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"text\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1808,
+        992
+      ],
+      "id": "821bc5c9-b33c-4e0a-95d1-1f719c9f849b",
+      "name": "Verifica se tem legenda"
+    },
+    {
+      "parameters": {
+        "content": "## Subworkflow\n\n\n\n\n\n\n\n\n\n\n### Conectar no template de [RELATORIO DETALHADO]",
+        "height": 240,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        1488
+      ],
+      "id": "38632878-097e-4f11-bd63-75be8db556c9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Subworkflow\n\n\n\n\n\n\n\n\n\n\n### Conectar no template de [INCLUI LEMBRETES]",
+        "height": 240,
+        "width": 260,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        1488
+      ],
+      "id": "27143229-37cb-4a36-bedb-9a791cc98635",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Relatórios",
+        "height": 360,
+        "width": 480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        1408
+      ],
+      "id": "3eb0b56e-9202-4fd0-8cd1-a03bfef006c3",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# Gráficos",
+        "height": 360,
+        "width": 320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        1408
+      ],
+      "id": "d1bbdcd0-1402-4c56-b6fa-ea43f555dcb8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "# Lembretes",
+        "height": 360,
+        "width": 500,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        1408
+      ],
+      "id": "8b9eb661-1bc9-41eb-9362-68d5e58d5130",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "# Transações",
+        "height": 360,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        544,
+        1408
+      ],
+      "id": "d916e77d-a595-46b4-a5a9-225b9e813dd3",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "# Cadastro",
+        "height": 360,
+        "width": 580,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        1408
+      ],
+      "id": "8966bfaf-48cc-418d-808c-e2521fce08ac",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "# Cadastramento Nível I\n\n\n\n\n\n\n\n\n\n\n\n\n## Primeira interação do usuário (Após isso, ele já aparece na aba de 'Inativos' na parte de Usuários)\n\n- Personalize a mensagem direto no Sistema:\n\n- Personalizar > Mensagens de Boas Vindas > *Boas Vindas - Usuário Recém-Cadastrado*\n",
+        "height": 380,
+        "width": 1160,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        960
+      ],
+      "id": "50027e84-3a2b-46f5-a5da-842cf3a65fcf",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"BaseUrl\"] }}/send/text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message }}"
+            },
+            {
+              "name": "readchat",
+              "value": "true"
+            },
+            {
+              "name": "linkPreview",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "233cde1b-fe4d-4d16-bc58-64bfd0a2a867",
+      "name": "Envia Msg Boas Vindas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -128,
+        1024
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Cadastramento Nível II\n\n## Segunda interação do usuário.\n\n- Personalize a mensagem direto no Sistema:\n\n- Personalizar > Mensagens de Boas Vindas > *Boas Vindas - Usuário Não Ativo*\n\nAqui, você pode enviar uma mensagem personalizada para enviar o link de pagamento. Após você ativar manualmente o usuário pelop sistema, ele conseguirá fazer os lançamentos.",
+        "height": 520,
+        "width": 580,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "48d1a9a7-d140-4e6b-8c88-a48f0f70a14e",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "88163d39-eca0-4f34-8943-2ace4f2934ac",
+              "leftValue": "={{ $('Varre o BD pelo remotejid').item.json?.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2f443aa6-c368-4403-a6ac-b2c851978d0f",
+              "leftValue": "={{ $('Varre o BD pelo remotejid').item.json?.ativo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        624
+      ],
+      "id": "8b4f123e-95f6-4f38-8928-f8b4971b9858",
+      "name": "Trava se usuario ativo ou nao"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"BaseUrl\"] }}/send/text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message }}"
+            },
+            {
+              "name": "readchat",
+              "value": "true"
+            },
+            {
+              "name": "linkPreview",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "79f6982d-8285-4e25-971b-e6a88a61b3d3",
+      "name": "Envia Mensagem Cobrando",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        384,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Credenciais\n\n## Inclua os tokens da OpenAI e Gemini\n\n\nendpoint_url= URL do seu Sistema",
+        "height": 580,
+        "width": 660,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3280,
+        368
+      ],
+      "id": "11dddaa5-7774-4ecf-a703-8d7f91f2034c",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.body.BaseUrl }}/message/download",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{ $json.body.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"{{ $json.body.message.messageid }}\",\n  \"return_base64\": true,\n  \"return_link\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2224,
+        1264
+      ],
+      "id": "82944956-2cd3-4ea8-9352-671963ab95a9",
+      "name": "Pega base64 do arquivo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $item(\"0\").$node[\"credenciais\"].json[\"model_gemini\"] }}:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{ $item(\"0\").$node[\"credenciais\"].json[\"gemini_token\"] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"contents\": [\n      {\n        \"parts\": [\n          {\"text\": {{ JSON.stringify(` Descreva todos os items do documento (ele pode ser um comprovante, extrato bancário, cupom fiscal, nota fiscal ou apenas um documento com anotacoes de produtos que foram adquiridos ou comprados), retorne em um formato como no exemplo abaixo:\nComprei DESCRICAO DO ITEM 1 por VALOR\nComprei DESCRICAO DO ITEM 2 por VALOR\n\nAo responder os números do valor devem usar a notação decimal americana\n`) }}},\n          {\n            \"inline_data\": {\n              \"mime_type\": \"{{ $json.mimetype }}\",\n              \"data\": \"{{ $json.base64Data }}\"\n            }\n          }\n        ]\n      }\n    ]\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2000,
+        1264
+      ],
+      "id": "41a5db34-82ba-4f16-9682-0670d9b80176",
+      "name": "Compreende PDF"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e186ec4c-4bc8-4aec-b104-094b5812d7b8",
+              "name": "remoteJid",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"chatid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "164e6a29-5dbc-445d-83b3-3eb3eaae6c3f",
+              "name": "message",
+              "value": "={{ $item(\"0\").$node[\"Compreende PDF\"].json[\"candidates\"][\"0\"][\"content\"][\"parts\"][\"0\"][\"text\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a4bda7ce-2450-448b-9606-8b1254292488",
+              "name": "id",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageid\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e14f4b0-5bbd-4f0e-acac-467d7e145aca",
+              "name": "timestamp",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"messageTimestamp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "c5f52a8d-b8bb-4873-a988-4ae2e76eeeb3",
+              "name": "pushname",
+              "value": "={{ $item(\"0\").$node[\"Webhook\"].json[\"body\"][\"message\"][\"senderName\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1584,
+        1264
+      ],
+      "id": "e9d748c7-796a-40df-b689-a22b982b3372",
+      "name": "estruturei os dados (documento pdf)"
+    },
+    {
+      "parameters": {
+        "content": "# Pega o Token do Usuário",
+        "height": 260,
+        "width": 580,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        544
+      ],
+      "id": "0fc69377-614e-45cb-b7fb-e892a4d2465f",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## GPT\n### Use o GPT-4o-mini",
+        "height": 260,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        864,
+        960
+      ],
+      "id": "e7be78ad-89bc-40b3-a050-290a506c45b7",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "# Versão Utilizada do N8N: 1.93.0\n\n## Abaixo, segue os prompts caso queira usar outra versão",
+        "height": 1040,
+        "width": 1340,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4640,
+        368
+      ],
+      "id": "796e4d61-cec8-4084-b0db-0bcc3ae80bd7",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "# Prompt Agente Principal\n\n# ASSISTENTE DE CONTROLE FINANCEIRO PESSOAL\n\n## Contexto\nVocê é um assistente especializado em controle financeiro pessoal. Seu papel é registrar transações (receitas e despesas) e gerar resumos financeiros por período. As transações são organizadas por categoria (ex: Alimentação, Farmácia, Escola, etc.) e tipificadas como Receita ou Despesa.\n\n## Objetivo\n- **Registrar transações**: Receitas e despesas organizadas por categoria\n- **Gerar resumos financeiros**: Por período específico\n- **Categorizar adequadamente**: Alimentação, Farmácia, Escola, Moradia, Transporte, Lazer, Trabalho/Profissional, Outros\n- **Tipificar corretamente**: Receita (ganhos) ou Despesa (gastos)\n- **Programar lembretes**: lembrar o usuário sobre um gasto ou uma despesa futura. \n\n## Dicionário de Classificação Financeira para Receitas x Despesas\n\n### RECEITAS (Entradas)\n**Palavras-chave**: fiz, entrou, caiu na conta, pagaram, achei, embolsei, lucrei, comissão, freela, trampo, bico, cliente pagou, estorno, reembolso\nEx: `fiz 20 reais de uber agora`\n\n### DESPESAS (Saídas)\n**Palavras-chave**: gastei, paguei, comprei, se foi, saiu, torrei, queimei\n\n## TEMPLATES DISPONÍVEIS\n\n### 1. RECEITA INSERIDA COM SUCESSO\n<template_receita_inserida_com_sucesso>🟢 Receita registrada!  \n*[Descrição da receita]*  \n💰 R$ [valor em 00,00]  \n🗓 [data formato dd/MM/yyyy]\n📊 [Categoria]\n📍 Forma de pagamento: [Forma de Pagamento]\n🔍 Código da Transação: [ID da transação]</template_receita_inserida_com_sucesso>\n\n### 2. DESPESA INSERIDA COM SUCESSO\n<template_despesa_inserida_com_sucesso>🔴 Despesa registrada!  \n*[Descrição da despesa]*  \n💰 R$ [valor em 00,00] \n🗓 [data formato dd/MM/yyyy]\n📊 [Categoria]\n📍 Forma de pagamento: [Forma de Pagamento]\n🔍 Código da Transação: [ID da transação]</template_despesa_inserida_com_sucesso>\n\n- Se for compra parcelada, lançar como despesas separadas nos seus respectivos valores. \n\n### 3. LEMBRETE DE GASTO FUTURO\n<template_mensagem_lembrete>🔔 LEMBRETE  \n✅ [Receita ou Despesa] registrada!  \n*[Descrição]*  \n💰 R$ [valor em 00,00] (Omitir se não houver)\n🗓 [data formato dd/MM/yyyy]\n💸 [Receita/Despesa]\n🔍 Código do Lembrete: [ID do lembrete]</template_mensagem_lembrete>\n\n### 4. RESUMO DE OPERAÇÕES POR PERÍODO\n<template_resumo_operacoes_por_periodo>*Relatório de Gastos:*\n🗓 De [Data inicial] à [Data Final]  \n\n📊 [DESPESAS] - Categorias:\n\n🍔 R$ [valor acumulado] (*Alimentação*)  \n💊 R$ [valor acumulado] (*Saúde*)  \n🎓 R$ [valor acumulado] (*Educação*)  \n🏠 R$ [valor acumulado] (*Moradia*)  \n🚌 R$ [valor acumulado] (*Transporte*)  \n🎉 R$ [valor acumulado] (*Lazer*)  \n💼 R$ [valor acumulado] (*Vestuário*)  \n🔖 R$ [valor acumulado] (*Outros*)\n\n📊 [RECEITAS] - Categorias:\n\n🍔 R$[valor acumulado] (*Alimentação*)  \n💊 R$[valor acumulado] (*Saúde*)  \n🎓 R$[valor acumulado] (*Educação*)  \n🏠 R$[valor acumulado] (*Moradia*)  \n🚌 R$[valor acumulado] (*Transporte*)  \n🎉 R$[valor acumulado] (*Lazer*)  \n💼 R$[valor acumulado] (*Vestuário*)  \n🔖 R$[valor acumulado] (*Outros*)\n\n💵 Saldo: *R$ [Saldo da Carteira no período]*</template_resumo_operacoes_por_periodo>\n\n### 5. RELATÓRIO DE GASTOS POR CATEGORIA\n<template_resumo_operacoes_por_categoria>*Relatório de Gastos na Categoria [CATEGORIA]:*\n🗓 De [Data inicial] à [Data Final]  \n\n📊 [DESPESAS]: R$ [Valor gasto na Categoria] \n\n📊 [RECEITAS]: R$ [Valor recebido na Categoria] \n\n*Total em receitas:* R$ [Valor_Total_Receitas]\n*Total em despesas:* R$ [Valor_Total_Despesas]\n\n💵 Saldo: *R$ [Saldo da Carteira no período]*</template_resumo_operacoes_por_categoria>\n\n- Preencha os campos com dados disponíveis\n- Sempre use os templates para responder o usuário sobre as transações, de acordo com a solicitação encontre o template adequado. \n\n### 6. ATUALIZAÇÃO DE TRANSAÇÕES\n- Atualize somente o que for necessário, de acordo com a solicitação do usuário. \n- Somente atualize a descrição da transação se o usuário solicitar.\n- Execute mudanças pontuais.\n- Apenas mude o tipo de transação (Receita ou Despesa) se o usuário solicitar especificamente para fazer isso. Senão, mantenha a original. \n\n## Dados de Contexto\n\n- **Timezone**: {{ $now.zoneName }}\n- **Data atual**: {{ $now.weekdayLong }}, {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}\n- **Hora atual**: {{ $now.format('H:m:s') }}\n\n### Formatação de Saída (Padrão WhatsApp)\n\nNEGRITO: *texto* (um asterisco)\nSUBLINHADO: _texto_ (um underscore)\nNUNCA usar formatação dupla (**texto** ou __texto__)\nNUNCA usar hashtags (#) para títulos\n\n- NUNCA duplique asteriscos\n- Mantenha consistência na apresentação de valores monetários (Ex: R$ 9.999,99)\n- Organize as transações de forma cronológica (mais recente primeiro)\n\nExemplo incorreto:\n**Exemplo**\nExemplo correto:\n*Exemplo*",
+        "height": 840,
+        "width": 680
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4624,
+        544
+      ],
+      "id": "5b7c1654-3dd9-4043-a2fb-47001730728e",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "# Prompt Imagem\n\nGere um resumo intuitivo para usar como caption de uma imagem no whatsapp. Utilize quebras de linha para melhor visualização e compreensão.\n\n- Mantenha a resposta de acordo com o template recebido. Apenas reorganize as informações.\n\n- Exclua os links. \n\n- Mantenha apenas as informações relevantes sobre os valores\n\n### FORMATAÇÃO (PADRÃO WHATSAPP)\n- Sempre siga a formatação abaixo: \n\nNEGRITO: *texto* (um asterisco)\nSUBLINHADO: _texto_ (um underscore)\nNUNCA usar formatação dupla (*texto* ou __texto__)\nNUNCA usar hashtags (#) para títulos\n\nExemplo correto: \n*Relatório de Gastos - Setembro de 2025:*\nTotal de despesas acumuladas: *R$ 9,709.53*\n\n_Detalhamento das despesas:_\n\n- *Alimentação:* R$ 120.00\n- *Moradia:* R$ 210.00\n- *Transporte:* R$ 240.00\n- *Lazer:* R$ 50.00\n- *Educação:* R$ 200.00\\\n- *Outros:* R$ 4.53\n\nQualquer dúvida, estou à disposição!\n",
+        "height": 840,
+        "width": 600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3920,
+        544
+      ],
+      "id": "9f692bbf-bd8d-44fa-97cf-151071239f03",
+      "name": "Sticky Note16"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-webhook.gcdutra.cloud",
+            "user-agent": "uazapiGO-Webhook/1.0",
+            "content-length": "2558",
+            "accept-encoding": "gzip",
+            "content-type": "application/json",
+            "x-forwarded-for": "187.45.178.254",
+            "x-forwarded-host": "n8n-webhook.gcdutra.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "2a3417dab634",
+            "x-real-ip": "187.45.178.254"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "BaseUrl": "https://finmec.uazapi.com",
+            "EventType": "messages",
+            "chat": {
+              "chatbot_agentResetMemoryAt": 0,
+              "chatbot_disableUntil": 0,
+              "chatbot_lastTriggerAt": 0,
+              "chatbot_lastTrigger_id": "",
+              "id": "rd34375dd82adb4",
+              "image": "",
+              "imagePreview": "https://pps.whatsapp.net/v/t61.24694-24/546514789_1478873316717677_2574649318375988419_n.jpg?stp=dst-jpg_s96x96_tt6&ccb=11-4&oh=01_Q5Aa2wEv8046jocY0c9pSHjMyGBLvkB64k4TcllcouflML7Mzg&oe=6907E0EC&_nc_sid=5e03e0&_nc_cat=111",
+              "lead_assignedAttendant_id": "",
+              "lead_email": "",
+              "lead_field01": "",
+              "lead_field02": "",
+              "lead_field03": "",
+              "lead_field04": "",
+              "lead_field05": "",
+              "lead_field06": "",
+              "lead_field07": "",
+              "lead_field08": "",
+              "lead_field09": "",
+              "lead_field10": "",
+              "lead_field11": "",
+              "lead_field12": "",
+              "lead_field13": "",
+              "lead_field14": "",
+              "lead_field15": "",
+              "lead_field16": "",
+              "lead_field17": "",
+              "lead_field18": "",
+              "lead_field19": "",
+              "lead_field20": "",
+              "lead_fullName": "",
+              "lead_isTicketOpen": false,
+              "lead_kanbanOrder": 0,
+              "lead_name": "",
+              "lead_notes": "",
+              "lead_personalid": "",
+              "lead_status": "",
+              "lead_tags": [],
+              "name": "Rafael Guimarães",
+              "owner": "556281067810",
+              "phone": "+55 64 9251-7702",
+              "wa_archived": false,
+              "wa_chatid": "556492517702@s.whatsapp.net",
+              "wa_contactName": "",
+              "wa_ephemeralExpiration": 0,
+              "wa_fastid": "556281067810:556492517702",
+              "wa_isBlocked": false,
+              "wa_isGroup": false,
+              "wa_isGroup_admin": false,
+              "wa_isGroup_announce": false,
+              "wa_isGroup_community": false,
+              "wa_isGroup_member": false,
+              "wa_isPinned": false,
+              "wa_label": [],
+              "wa_lastMessageSender": "556492517702@s.whatsapp.net",
+              "wa_lastMessageTextVote": "Gastei 50,00 reais comprando verduras no Celeiro hoje.",
+              "wa_lastMessageType": "Conversation",
+              "wa_lastMsgTimestamp": 1761264395000,
+              "wa_muteEndTime": 0,
+              "wa_name": "Rafael Guimarães",
+              "wa_unreadCount": 2
+            },
+            "instanceName": "Finmec",
+            "message": {
+              "buttonOrListid": "",
+              "chatid": "556492517702@s.whatsapp.net",
+              "content": "Gastei 50,00 reais comprando verduras no Celeiro hoje.",
+              "convertOptions": "",
+              "edited": "",
+              "fromMe": false,
+              "groupName": "Unknown",
+              "id": "556281067810:3EB0E5893C6DB24C2690ED",
+              "isGroup": false,
+              "mediaType": "",
+              "messageTimestamp": 1761264395000,
+              "messageType": "Conversation",
+              "messageid": "3EB0E5893C6DB24C2690ED",
+              "owner": "556281067810",
+              "quoted": "",
+              "reaction": "",
+              "sender": "556492517702@s.whatsapp.net",
+              "senderName": "Rafael Guimarães",
+              "sender_lid": "191328210125003@lid",
+              "sender_pn": "556492517702@s.whatsapp.net",
+              "source": "web",
+              "status": "",
+              "text": "Gastei 50,00 reais comprando verduras no Celeiro hoje.",
+              "track_id": "",
+              "track_source": "",
+              "type": "text",
+              "vote": "",
+              "wasSentByApi": false
+            },
+            "owner": "556281067810",
+            "token": "3a27c82f-7d14-4656-b616-89a4be7e1ce4"
+          },
+          "webhookUrl": "https://n8n-webhook.gcdutra.cloud/webhook/finmec",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Envia os dados do Webhook",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "credenciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "credenciais": {
+      "main": [
+        [
+          {
+            "node": "Envia os dados do Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia os dados do Webhook": {
+      "main": [
+        [
+          {
+            "node": "rotas de mensagens recebidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rotas de mensagens recebidas": {
+      "main": [
+        [
+          {
+            "node": "estruturei os dados (conversation)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "estruturei os dados (conversation)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pega base64 do arquivo2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pega base64 do arquivo3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pega base64 do arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estruturei os dados (conversation)": {
+      "main": [
+        [
+          {
+            "node": "referencia das mensagens recebidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcreve o áudio": {
+      "main": [
+        [
+          {
+            "node": "estruturei os dados (audio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estruturei os dados (audio)": {
+      "main": [
+        [
+          {
+            "node": "referencia das mensagens recebidas",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "referencia das mensagens recebidas": {
+      "main": [
+        [
+          {
+            "node": "Referencia dos Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Referencia dos Dados": {
+      "main": [
+        [
+          {
+            "node": "Varre o BD pelo remotejid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Token do Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token do Usuario": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variaveis do Sistema": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Trava se usuario ativo ou nao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Variaveis do Sistema",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cria Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Varre o BD pelo remotejid": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pega o Token do Usuario": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria Usuario": {
+      "main": [
+        [
+          {
+            "node": "Cria MasterToken",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria MasterToken": {
+      "main": [
+        [
+          {
+            "node": "Cria Carteira Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria Carteira Principal": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pega base64 do arquivo2": {
+      "main": [
+        [
+          {
+            "node": "convert MP3 para binario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convert MP3 para binario": {
+      "main": [
+        [
+          {
+            "node": "transcreve o áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pega base64 do arquivo3": {
+      "main": [
+        [
+          {
+            "node": "Analisa Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Formata Mensagem BOAS VINDAS!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Mensagem BOAS VINDAS!": {
+      "main": [
+        [
+          {
+            "node": "Envia Msg Boas Vindas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres1": {
+      "main": [
+        [
+          {
+            "node": "Formata Mensagem INATIVO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Mensagem INATIVO": {
+      "main": [
+        [
+          {
+            "node": "Envia Mensagem Cobrando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analisa Imagem": {
+      "main": [
+        [
+          {
+            "node": "Verifica se tem legenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "insere_transacoes1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deleta_transacao": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atualiza_transacao": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transacoes_recentes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "busca_todos_lembretes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lista_todas_categorias": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "busca_informacoes_carteira_atual": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Envia texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "grafico_barra_ultimos_sete_dias": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "grafico_pizza": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Envia Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "insere_lembretes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_forma_pagamento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "busca_transacao_especifica": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resumo_mes_atual": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "relatorio_detalhado": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estruturei os dados (imagem com legenda)": {
+      "main": [
+        [
+          {
+            "node": "referencia das mensagens recebidas",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "estruturei os dados (imagem sem legenda)": {
+      "main": [
+        [
+          {
+            "node": "referencia das mensagens recebidas",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Verifica se tem legenda": {
+      "main": [
+        [
+          {
+            "node": "estruturei os dados (imagem com legenda)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "estruturei os dados (imagem sem legenda)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trava se usuario ativo ou nao": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pega o Token do Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pega base64 do arquivo": {
+      "main": [
+        [
+          {
+            "node": "Compreende PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compreende PDF": {
+      "main": [
+        [
+          {
+            "node": "estruturei os dados (documento pdf)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estruturei os dados (documento pdf)": {
+      "main": [
+        [
+          {
+            "node": "referencia das mensagens recebidas",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4c64d450-313d-43bc-b421-e99f3e5fa90f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d6121d4b62f94a186c73d670c8ffdfd14c8e5b684b8378de4e97df327caec82"
+  },
+  "id": "czVNsIo31Z0J2Ucl",
+  "tags": []
+}

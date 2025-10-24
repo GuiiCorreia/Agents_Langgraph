@@ -1,0 +1,68 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+dist
+build
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# N8n workflows (já não são mais necessários)
+*.json
+!package.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment (será fornecido no deploy)
+# .env já está no .gitignore
+
+# Database
+*.db
+*.sqlite
+
+# Outros
+.dockerignore
+Dockerfile
+docker-compose.yml

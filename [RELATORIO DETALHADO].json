@@ -1,0 +1,320 @@
+{
+  "name": "[RELATORIO DETALHADO]",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "data_inicio"
+            },
+            {
+              "name": "data_fim"
+            },
+            {
+              "name": "query"
+            },
+            {
+              "name": "apikey"
+            },
+            {
+              "name": "server_url"
+            },
+            {
+              "name": "categoria"
+            }
+          ]
+        }
+      },
+      "id": "9b6bef5d-d27f-4cf3-bce0-a4f47b480c33",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Transações do Usuário: {{ $json.data.toJsonString() }}\n\nPeríodo de solicitação: de {{ $('When Executed by Another Workflow').item.json.data_inicio }} até {{ $('When Executed by Another Workflow').item.json.data_fim }}",
+        "options": {
+          "systemMessage": "=# Prompt Otimizado para Geração de Relatórios Financeiros\n\n## Papel e Contexto\nVocê é um *assistente especializado em relatórios financeiros* que gera relatórios personalizados de controle financeiro com base nas solicitações específicas do usuário.\n\n## Objetivos Principais\n1. *Analisar* e interpretar corretamente a solicitação do usuário\n2. *Identificar* os parâmetros específicos do relatório desejado\n3. *Gerar* um relatório estruturado seguindo o template fornecido\n\n## Parâmetros de Análise\nAo receber uma solicitação, identifique obrigatoriamente:\n\n### 📊 *Tipo de Transação*\n- Somente *despesas*\n- Somente *receitas* \n- *Ambos* os tipos\n- Se o usuário quer saber sobre os \"gastos\" do mês, considere as despesas e receitas. \n\n### 📅 *Período*\n- Data de início\n- Data de fim\n- Períodos específicos (mensal, trimestral, anual, etc.)\n\n### 🏷️ *Categoria*\n- Categoria específica solicitada\n- Múltiplas categorias\n- Todas as categorias\n\n## Instruções de Execução\n\n### ✅ *O que FAZER:*\n- Incluir *apenas* as informações solicitadas pelo usuário\n- Manter *precisão* nos dados apresentados\n- Seguir *rigorosamente* o template de resposta\n- Calcular o *total correto* das transações. Sempre chame a sua tool para executar o cálculo\n\n### ❌ *O que NÃO fazer:*\n- Adicionar informações não solicitadas\n- Incluir dados fora do período especificado\n- Misturar categorias não requisitadas\n\n## Template de Resposta\n- Na sua resposta inclua apenas as categorias que tiveram gastos.\n```\nRelatório de Transações no período de {{ $('When Executed by Another Workflow').item.json.data_inicio }} até {{ $('When Executed by Another Workflow').item.json.data_fim }}\n\n*Tipo de transação:* [Despesa | Receita | Despesa/Receita]\n*Categoria:* [CATEGORIA_ESPECIFICA]\n\nTransações:\n1. *[Descrição]*, em [Data], no valor de R$ [Valor], [Categoria]\n2. *[Descrição]*, em [Data], no valor de R$ [Valor], [Categoria]\n3. *[Descrição]*, em [Data], no valor de R$ [Valor], [Categoria]\n...\nN. *[Descrição]*, em [Data], no valor de R$ [Valor], [Categoria]\n\n*Total em despesas:* R$ [Valor_Total_Despesas]\n```\n\n## Formato de Saída\n- Use formatação clara e legível\n- Mantenha consistência na apresentação de valores monetários\n- Organize as transações de forma cronológica (mais recente primeiro)\n- Destaque o total final para fácil visualização\n\n## Validação\nAntes de gerar o relatório, confirme se:\n- [ ] Todos os parâmetros foram identificados corretamente\n- [ ] O período está claramente definido\n- [ ] As categorias correspondem ao solicitado\n- [ ] O cálculo do total está correto"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "b8ec3ff2-8404-412f-aec5-cc7bdbb25614",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "39e96073-dc97-47e9-9d00-7a87d3bcba40",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.server_url }}/api/transactions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.apikey }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0d8dc70f-73f8-43ce-9558-d1fbbe596870",
+      "name": "Buscar Transacoes"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1aa0678-2a4e-4d97-a61b-359f72cd3f45",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "09f30cdf-0b36-4bbf-8f9f-c7a66e9210d4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "tipo, valor, data_registro, descricao, categoria_name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "947f3604-6964-4f89-a39f-3c879c2910f8",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        208
+      ],
+      "id": "61a082a7-53c8-4990-8c6a-a2c69ba6f16f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "K1zteMl5AEaGdtSu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Acessando os dados do n8n\nconst data = $item(\"0\").$node[\"Aggregate\"].json[\"data\"];\n\n// Somando todos os valores\nconst total = data.reduce((soma, item) => {\n  return soma + parseFloat(item.valor);\n}, 0);\n\n// Resultado\nconsole.log(`Total: R$ ${total.toFixed(2)}`);\n\n// Adicionando o total como um novo item no array data\nconst novoItem = {\n  tipo: \"Total\",\n  valor: total.toFixed(2),\n  data_registro: new Date().toISOString(),\n  descricao: `Total de ${data.length} registros`,\n  categoria_name: \"Total Geral\"\n};\n\n// Criando novo array com todos os dados originais + o total\nconst dadosComTotal = [...data, novoItem];\n\n// Para usar no n8n, retorne um array de objetos:\nreturn [\n  {\n    json: {\n      data: dadosComTotal,\n      resumo: {\n        total: total,\n        total_formatado: `R$ ${total.toFixed(2)}`,\n        quantidade_registros: data.length\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ],
+      "id": "b235cb5a-b4ba-448f-8bfb-02f44460100a",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dfbcb728-5926-407c-8135-17851728fa8f",
+              "leftValue": "={{ new Date($json.data_registro).toISOString().split('T')[0] }}",
+              "rightValue": "={{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"data_inicio\"] }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "afterOrEquals"
+              }
+            },
+            {
+              "id": "bc19c106-1b4f-4d0a-90ad-93bf3af80849",
+              "leftValue": "={{ new Date($json.data_registro).toISOString().split('T')[0] }}",
+              "rightValue": "={{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"data_fim\"] }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            },
+            {
+              "id": "9844d3b2-0680-4f31-8ab9-3457c8e4ed00",
+              "leftValue": "={{ $json.categoria_name }}",
+              "rightValue": "={{ $item(\"0\").$node[\"When Executed by Another Workflow\"].json[\"categoria\"] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        0
+      ],
+      "id": "aaa9f2f8-3fe7-403b-9f35-d8b27d24aa44",
+      "name": "Filter2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Buscar Transacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Transacoes": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "36e98938-a316-40f5-84c9-9e146367d9b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d6121d4b62f94a186c73d670c8ffdfd14c8e5b684b8378de4e97df327caec82"
+  },
+  "id": "5b9QHAwk4hxbu7XB",
+  "tags": []
+}
