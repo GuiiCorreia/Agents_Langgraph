@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar arquivos necessários para o build
-COPY pyproject.toml README.md ./
+# Copiar pyproject.toml
+COPY pyproject.toml ./
 
 # Instalar dependências usando UV sync
 RUN uv sync --no-dev

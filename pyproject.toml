@@ -2,12 +2,7 @@
 name = "finmec"
 version = "1.0.0"
 description = "Sistema de gestão financeira via WhatsApp com FastAPI, LangGraph e IA"
-readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
-authors = [
-    { name = "FinMec Team" }
-]
 
 dependencies = [
     # FastAPI and ASGI server
