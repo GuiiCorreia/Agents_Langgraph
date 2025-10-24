@@ -1,5 +1,11 @@
 # Dockerfile para FinMec - Sistema de Gestão Financeira via WhatsApp
-FROM python:3.12-slim
+# Usando UV como único gerenciador de dependências
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+# Metadados
+LABEL maintainer="FinMec Team"
+LABEL description="Sistema de gestão financeira via WhatsApp com FastAPI, LangGraph e IA"
+LABEL version="1.0.0"
 
 # Variáveis de ambiente
 ENV PYTHONUNBUFFERED=1 \
@@ -17,17 +23,16 @@ RUN apt-get update && apt-get install -y \
     g++ \
     postgresql-client \
     curl \
-    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+# Copiar arquivos de configuração do projeto
+COPY pyproject.toml ./
+COPY uv.lock ./
 
-# Copiar pyproject.toml e requirements.txt
-COPY pyproject.toml requirements.txt ./
-
-# Instalar dependências com uv
-RUN uv pip install --system --no-cache-dir -r requirements.txt
+# Instalar dependências usando uv sync
+# --frozen: usa exatamente as versões do uv.lock
+# --no-cache: não usa cache para garantir build limpo
+RUN uv sync --frozen --no-cache --no-dev
 
 # Copiar o código da aplicação
 COPY . .
@@ -42,7 +47,7 @@ RUN useradd -m -u 1000 finmec && \
 # Expor porta da aplicação
 EXPOSE 8000
 
-# Health check (executado como root, antes de mudar usuário)
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
@@ -50,4 +55,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 USER finmec
 
 # Comando para iniciar a aplicação
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# Usando uv run para executar com o ambiente virtual do uv
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
