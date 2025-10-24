@@ -30,7 +30,7 @@ class Reminder(Base):
     sent_at = Column(DateTime(timezone=True), nullable=True)
 
     # Metadados adicionais
-    metadata = Column(Text, nullable=True)  # JSON string com dados extras
+    extra_data = Column(Text, nullable=True)  # JSON string com dados extras
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

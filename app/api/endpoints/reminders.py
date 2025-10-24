@@ -42,7 +42,7 @@ async def create_reminder(
         description=reminder.description,
         reminder_date=reminder.reminder_date,
         is_active=reminder.is_active,
-        metadata=reminder.metadata,
+        extra_data=reminder.extra_data,
         is_sent=False
     )
 

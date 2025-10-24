@@ -11,7 +11,7 @@ class ReminderBase(BaseModel):
     description: Optional[str] = Field(None, description="Descrição do lembrete")
     reminder_date: datetime = Field(..., description="Data e hora do lembrete")
     is_active: bool = Field(True, description="Lembrete ativo?")
-    metadata: Optional[str] = Field(None, description="Dados adicionais em JSON")
+    extra_data: Optional[str] = Field(None, description="Dados adicionais em JSON")
 
 
 class ReminderCreate(ReminderBase):
@@ -29,7 +29,7 @@ class ReminderUpdate(BaseModel):
     description: Optional[str] = None
     reminder_date: Optional[datetime] = None
     is_active: Optional[bool] = None
-    metadata: Optional[str] = None
+    extra_data: Optional[str] = None
 
 
 class ReminderResponse(ReminderBase):
