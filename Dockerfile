@@ -3,8 +3,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 # Variáveis de ambiente
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    UV_SYSTEM_PYTHON=1
+    PYTHONDONTWRITEBYTECODE=1
 
 # Diretório de trabalho
 WORKDIR /app
@@ -16,11 +15,11 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements.txt
-COPY requirements.txt .
+# Copiar apenas pyproject.toml primeiro (melhor cache)
+COPY pyproject.toml .
 
-# Instalar dependências usando uv
-RUN uv pip install --system --no-cache -r requirements.txt
+# Instalar dependências usando UV sync
+RUN uv sync --no-dev
 
 # Copiar o código da aplicação
 COPY . .
@@ -28,5 +27,5 @@ COPY . .
 # Expor porta
 EXPOSE 8000
 
-# Comando para iniciar
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# Comando para iniciar usando uv run
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
